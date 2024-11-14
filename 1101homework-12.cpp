@@ -17,7 +17,7 @@ using namespace std;
 class ExpressionTree {
  private:
   struct Node {
-    string ValueAndOpe;
+    string ValueAndOpe; //儲存節點的值或運算符
     Node* left;
     Node* right;
     Node(const string& val) : ValueAndOpe(val), left(nullptr), right(nullptr) {}
@@ -37,7 +37,7 @@ class ExpressionTree {
     return token == "+" || token == "-" || token == "*" || token == "/" || token == "%";
   }
 
-  void applyOperator(stack<Node*>& numbers, stack<string>& operators) {
+  void applyOperator(stack<Node*>& numbers, stack<string>& operators) { //取出兩個數字或運算符，結合成新的節點
     Node* right = numbers.top();
     numbers.pop();
     Node* left = numbers.top();
@@ -83,8 +83,8 @@ class ExpressionTree {
   }
 
   // 中序
-  void printInFixOrder(Node* node) {
-    if (!node)
+  void printInFixOrder(Node* node) { //中序表達式的輸出是按照數學表達式的標準順序，需處理括號
+    if (!node)                       //ex:3+4*5 --> 可表達成(3+4)*5 or 3+(4*5)不同結果
       return;
     if (isOperator(node->ValueAndOpe))
       cout << "(";
@@ -96,9 +96,9 @@ class ExpressionTree {
   }
 
   // 前序
-  void printPreFixOrder(Node* node) {
-    if (!node)
-      return;
+  void printPreFixOrder(Node* node) { //前序和後序不需要括號
+    if (!node)                        //(prefix)ex: + 3 * 4 5 --> 3 + (4 * 5) 運算符總是先出現。
+      return;                         //postfix 就是反概念
     cout << node->ValueAndOpe << " ";
     printPreFixOrder(node->left);
     printPreFixOrder(node->right);
@@ -116,7 +116,7 @@ class ExpressionTree {
   int evaluate(Node* node) {
     if (!node)
       return 0;
-    if (!isOperator(node->ValueAndOpe))
+    if (!isOperator(node->ValueAndOpe)) //如果不是運算符，將字串轉成整數並返回結束遞迴
       return stoi(node->ValueAndOpe);
 
     int leftVal = evaluate(node->left);
