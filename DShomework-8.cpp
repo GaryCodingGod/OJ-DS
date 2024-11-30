@@ -1,5 +1,5 @@
-// Modify the stack ADT implementation from Section 5.1.5 of the textbook (or as shown in thelecture slides on implementing a stack with a generic linked list) 
-// to make it a fully generic class using templates.
+//Implement  a  version  of  the  deque  ADT  with  a  fixed  capacity,  using  an  array  in  a  circula
+//structure similar to the circular queue implementation discussed in Section 5.2.4 of the textbook
 #include <iostream>
 
 using namespace std;
