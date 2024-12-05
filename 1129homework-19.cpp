@@ -69,7 +69,7 @@ public:
         }
     }
 
-    // 建立線索二元樹 
+    // 建立線索二元樹
     void CreateThread() {
         TreeNode<T> *prev = nullptr;
         createThread(root, prev); 
