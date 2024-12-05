@@ -1,6 +1,10 @@
+// A Threaded Tree is a type of binary tree designed to optimize tree traversal, particularly for in-order traversal 
+// without using additional data structures like stacks or recursion. It achieves this by utilizing otherwise null pointers in a binary tree to store threads 
+// which are pointers to the node's in-order predecessor or successor**
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
+
 using namespace std;
 
 template<class T>
@@ -29,10 +33,9 @@ private:
         // 線索處理：如果前一個節點的右指標為空，將其設為當前節點
         if (prev && prev->right == nullptr) {
             prev->right = node;
-            prev->isThread = true; // 標記為線索
+            prev->isThread = true;
         }
-
-        prev = node; // 更新前一個節點為當前節點
+            prev = node;
 
         if (!node->isThread)
             createThread(node->right, prev);
@@ -66,7 +69,7 @@ public:
         }
     }
 
-    // 建立線索二元樹
+    // 建立線索二元樹 
     void CreateThread() {
         TreeNode<T> *prev = nullptr;
         createThread(root, prev); 
