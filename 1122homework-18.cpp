@@ -1,3 +1,6 @@
+// AnR-tree is a tree-based data structure designed for organizing and managing multi-dimensional spatial data.
+// It is particularly effective for tasks such as range queries (e.g., finding all objects within a certain area) and nearest-neighbor searches (e.g., finding the closest point to a location).
+// R-trees are widely used in applications like Geographic Information Systems (GIS), multimedia databases, and spatial indexing.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,7 +10,7 @@
 #define MAX_ENTRIES 2
 #define MAX_NAME_LEN 50
 
-typedef struct {
+typedef struct { //表示節點或資料項的MBR-最小包圍矩形
     double minX, minY;
     double maxX, maxY;
 } BoundingBox;
@@ -19,13 +22,13 @@ typedef struct {
 
 typedef struct RTreeNode {
     int isLeaf;
-    int count;
+    int count; //當前節點中德的項目數量
     BoundingBox mbr;
     struct RTreeNode* children[MAX_ENTRIES + 1];
     DataItem data[MAX_ENTRIES];
 } RTreeNode;
 
-typedef struct {
+typedef struct { //儲存搜尋結果
     DataItem item;
     double distance;
 } SearchResult;
