@@ -1,6 +1,6 @@
 //Please finish the function BFS and DFS in the template.
 //Input:an integer representing the random seed.
-//Output:BFS order and DFS order
+//Output:BFS order and DFS order.
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
