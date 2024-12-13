@@ -412,7 +412,7 @@ int main()
     srand(n);
     for(j = 0;j < 26;j ++)
         node->addFromTail(g->addVertex(j + 'A'));
-    k = rand() % 100;
+    k = rand() % 100; //隨機決定要新增多少條邊
     for(j = 0;j < k;j ++)
     {
         a = rand() % 26;
