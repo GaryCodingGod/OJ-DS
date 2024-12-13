@@ -336,7 +336,7 @@ public:
 			return NULL;
 		}
 	}
-	void addLink(WeightedGraphVertex<V, E> *v1, WeightedGraphVertex<V, E> *v2, E w)
+	void addLink(WeightedGraphVertex<V, E> *v1, WeightedGraphVertex<V, E> *v2, E w) //創建一條邊
 	{
 		WeightedGraphEdge<V, E> *edge = new WeightedGraphEdge<V, E>(w, v1, v2);
 		v1->addEdge(edge);
@@ -345,7 +345,7 @@ public:
 	}
 	WeightedGraphVertex<V, E> *addVertex(V d)
 	{
-		WeightedGraphVertex<V, E> *v = new WeightedGraphVertex<V, E>(d);
+		WeightedGraphVertex<V, E> *v = new WeightedGraphVertex<V, E>(d);//創建一個新節點
 		vertex->addFromTail(v);
 		return v;
 	}
