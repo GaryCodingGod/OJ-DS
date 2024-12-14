@@ -1,157 +1,143 @@
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
-template <class T>
 class CircularSequence {
 private:
-    T *seq;
+    int* array;
     int capacity;
     int size;
     int front;
     int back;
 
+    int circularIndex(int index) const {
+        return (front + index) % capacity;
+    }
+
 public:
     CircularSequence(int cap) : capacity(cap), size(0), front(0), back(0) {
-        seq = new T[capacity];
+        array = new int[capacity];
     }
 
     ~CircularSequence() {
-        delete[] seq;
+        delete[] array;
     }
 
-    int sizeOfSequence() const {
-        return size;
-    }
-
-    bool empty() const {
-        return size == 0;
-    }
-
-    void insertBack(T val) {
+    void insertFront(int value) {
         if (size == capacity) {
-            throw overflow_error("Cannot insert, the sequence is full");
-        }
-        seq[back] = val;
-        back = (back + 1) % capacity;
-        size++;
-    }
-
-    void insertFront(T val) {
-        if (size == capacity) {
-            throw overflow_error("Cannot insert, the sequence is full");
+            throw overflow_error("Sequence is full");
         }
         front = (front - 1 + capacity) % capacity;
-        seq[front] = val;
+        array[front] = value;
         size++;
     }
 
-    void insert(int idx, T val) {
-        if (idx < 0 || idx > size) {
-            throw runtime_error("Index out of range in insert function");
+    void insertBack(int value) {
+        if (size == capacity) {
+            throw overflow_error("Sequence is full");
         }
-
-        if (idx == 0) {
-            insertFront(val);
-            return;
-        }
-
-        if (idx == size) {
-            insertBack(val);
-            return;
-        }
-
-        int insertPos = (front + idx) % capacity;
-        for (int i = size; i > idx; i--) {
-            int cur = (front + i) % capacity;
-            int pre = (front + i - 1) % capacity;
-            seq[cur] = seq[pre];
-        }
-        seq[insertPos] = val;
+        array[back] = value;
         back = (back + 1) % capacity;
         size++;
     }
 
-    T erase(int idx) {
-        if (idx < 0 || idx >= size) {
-            throw runtime_error("Index out of range in erase function");
+    int removeFront() {
+        if (size == 0) {
+            throw underflow_error("Sequence is empty");
         }
-
-        int erasePos = (front + idx) % capacity;
-        T erasedValue = seq[erasePos];
-
-        for (int i = idx; i < size - 1; i++) {
-            int curPos = (front + i) % capacity;
-            int nextPos = (front + i + 1) % capacity;
-            seq[curPos] = seq[nextPos];
-        }
-
-        back = (back - 1 + capacity) % capacity;
+        int value = array[front];
+        front = (front + 1) % capacity;
         size--;
-
-        return erasedValue;
+        return value;
     }
 
-    T peekFront() const {
-        if (empty()) {
-            throw runtime_error("Sequence is empty");
+    int removeBack() {
+        if (size == 0) {
+            throw underflow_error("Sequence is empty");
         }
-        return seq[front];
+        back = (back - 1 + capacity) % capacity;
+        int value = array[back];
+        size--;
+        return value;
     }
 
-    T peekBack() const {
-        if (empty()) {
-            throw runtime_error("Sequence is empty");
+    int atIndex(int index) const {
+        if (index < 0 || index >= size) {
+            throw out_of_range("Index out of range");
         }
-        return seq[(back - 1 + capacity) % capacity];
+        return array[circularIndex(index)];
     }
 
-    void clear() {
-        size = 0;
-        front = 0;
-        back = 0;
-    }
-
-    void display() const {
+    int indexOf(int value) const {
         for (int i = 0; i < size; i++) {
-            cout << seq[(front + i) % capacity] << " ";
+            if (array[circularIndex(i)] == value) {
+                return i;
+            }
+        }
+        return -1; 
+    }
+
+    void print() const {
+        for (int i = 0; i < size; i++) {
+            cout << atIndex(i) << " ";
         }
         cout << endl;
+    }
+
+    // Iterator class
+    class Iterator {
+    private:
+        const CircularSequence& sequence;
+        int current;
+        int count;
+
+    public:
+        Iterator(const CircularSequence& seq) : sequence(seq), current(seq.front), count(0) {}
+
+        bool hasNext() const {
+            return count < sequence.size;
+        }
+
+        int next() {
+            if (!hasNext()) {
+                throw out_of_range("No more elements in the sequence");
+            }
+            int value = sequence.array[current];
+            current = (current + 1) % sequence.capacity;
+            count++;
+            return value;
+        }
+    };
+
+    Iterator iterator() const {
+        return Iterator(*this);
     }
 };
 
 int main() {
-    CircularSequence<int> sequence(5);
+    CircularSequence seq(5); // Capacity of 5
 
-    // 測試插入操作
-    sequence.insertBack(10);
-    sequence.insertBack(20);
-    sequence.insertBack(30);
-    sequence.insertFront(5);
-    sequence.display(); // 5 10 20 30
+    seq.insertBack(10);
+    seq.insertBack(20);
+    seq.insertBack(30);
+    seq.insertFront(5);
+    seq.print(); // Output: 5 10 20 30
 
-    cout << "Erased value: " << sequence.erase(1) << endl;
-    sequence.display(); // 5 20 30
+    cout << "Element at index 2: " << seq.atIndex(2) << endl; // Output: 20
+    cout << "Index of element 10: " << seq.indexOf(10) << endl; // Output: 1
 
-    // 測試邊界情況
-    sequence.insertBack(40);
-    sequence.insertBack(50);
-    try {
-        sequence.insertBack(60); // 超過容量
-    } catch (const overflow_error &e) {
-        cout << e.what() << endl;
+    seq.removeFront();
+    seq.print(); // Output: 10 20 30
+
+    seq.removeBack();
+    seq.print(); // Output: 10 20
+
+    auto it = seq.iterator();
+    while (it.hasNext()) {
+        cout << it.next() << " ";
     }
-    sequence.display(); // 5 20 30 40 50
-
-    // 測試刪除首尾
-    cout << "Erased value: " << sequence.erase(0) << endl; // 刪除第一個元素
-    sequence.display(); // 20 30 40 50
-    cout << "Erased value: " << sequence.erase(sequence.sizeOfSequence() - 1) << endl; // 刪除最後一個元素
-    sequence.display(); // 20 30 40
-
-    // 測試清空
-    sequence.clear();
-    sequence.display();
+    cout << endl; // Output: 10 20
 
     return 0;
 }
