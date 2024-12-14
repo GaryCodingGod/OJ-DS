@@ -1,4 +1,8 @@
+//Suppose we want to extend the Sequence abstract data type with functions indexOfElement(e)and positionOfElement(e)
+//which respectively return the index and the position of the (first occurrenceof) element e in the sequence.
+//Show how to implement these functions by expressing them in terms ofother functions of the Sequence interface
 #include <iostream>
+
 using namespace std;
 
 template <class T>
