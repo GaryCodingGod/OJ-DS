@@ -1,3 +1,4 @@
+// Give C++ code describing how to implement all the operations in the sequence ADT using an array used in a circular fashion
 #include <iostream>
 #include <stdexcept>
 
