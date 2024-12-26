@@ -1,3 +1,4 @@
+//Please finish the function isForest in class Graph in template.
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
